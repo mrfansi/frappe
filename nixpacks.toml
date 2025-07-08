@@ -1,0 +1,40 @@
+# nixpacks.toml - Configuration for Frappe Framework deployment with Easypanel
+
+[phases.setup]
+nixPkgs = [
+    "python310",
+    "nodejs-18_x",
+    "yarn",
+    "redis",
+    "mariadb"
+]
+aptPkgs = [
+    "mariadb-client",
+    "libmysqlclient-dev",
+    "libssl-dev",
+    "libffi-dev",
+    "wkhtmltopdf",
+    "xvfb",
+    "libfontconfig",
+    "wait-for-it",
+    "git"
+]
+
+[phases.install]
+cmds = [
+    "pip install --upgrade pip",
+    "pip install frappe-bench",
+    "npm install -g yarn"
+]
+
+[phases.build]
+cmds = [
+    "bench init --skip-redis-config-generation frappe-bench",
+    "cd frappe-bench && bench get-app --branch develop https://github.com/mrfansi/frappe.git",
+    "cd frappe-bench && bench new-site frappe.localhost --force --mariadb-root-password admin --admin-password admin",
+    "cd frappe-bench && bench --site frappe.localhost install-app frappe",
+    "cd frappe-bench && bench build --app frappe"
+]
+
+[start]
+cmd = "cd frappe-bench && bench start"
