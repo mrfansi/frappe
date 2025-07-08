@@ -29,12 +29,27 @@ cmds = [
 
 [phases.build]
 cmds = [
-    "bench init --skip-redis-config-generation frappe-bench",
-    "cd frappe-bench && bench get-app --branch develop https://github.com/mrfansi/frappe.git",
-    "cd frappe-bench && bench new-site frappe.localhost --force --mariadb-root-password admin --admin-password admin",
-    "cd frappe-bench && bench --site frappe.localhost install-app frappe",
-    "cd frappe-bench && bench build --app frappe"
+    "bench init --skip-redis-config-generation $BENCH_DIR",
+    "cd $BENCH_DIR && bench get-app --branch $FRAPPE_BRANCH $FRAPPE_REPO",
+    "cd $BENCH_DIR && bench new-site $SITE_NAME --force --mariadb-root-password $DB_ROOT_PASSWORD --admin-password $ADMIN_PASSWORD",
+    "cd $BENCH_DIR && bench --site $SITE_NAME install-app frappe",
+    "cd $BENCH_DIR && bench build --app frappe"
 ]
 
 [start]
-cmd = "cd frappe-bench && bench start"
+cmd = "cd $BENCH_DIR && bench start"
+
+[variables]
+PORT = "${PORT:-8000}"
+BENCH_DIR = "frappe-bench"
+FRAPPE_REPO = "https://github.com/mrfansi/frappe.git"
+FRAPPE_BRANCH = "develop"
+SITE_NAME = "${SITE_NAME:-frappe.localhost}"
+DB_ROOT_PASSWORD = "${DB_ROOT_PASSWORD:-admin}"
+ADMIN_PASSWORD = "${ADMIN_PASSWORD:-admin}"
+FRAPPE_SITE_NAME_HEADER = "${SITE_NAME}"
+DB_HOST = "${DB_HOST:-localhost}"
+DB_PORT = "${DB_PORT:-3306}"
+REDIS_CACHE = "${REDIS_CACHE:-localhost:6379}"
+REDIS_QUEUE = "${REDIS_QUEUE:-localhost:6379}"
+SOCKETIO_PORT = "${SOCKETIO_PORT:-9000}"
