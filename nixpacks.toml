@@ -3,6 +3,7 @@
 [phases.setup]
 nixPkgs = [
     "python310",
+    "python310Packages.pip",
     "nodejs-18_x",
     "yarn",
     "redis",
@@ -17,13 +18,14 @@ aptPkgs = [
     "xvfb",
     "libfontconfig",
     "wait-for-it",
-    "git"
+    "git",
+    "python3-pip"
 ]
 
 [phases.install]
 cmds = [
-    "pip install --upgrade pip",
-    "pip install frappe-bench",
+    "python3 -m pip install --upgrade pip",
+    "python3 -m pip install frappe-bench",
     "npm install -g yarn"
 ]
 
